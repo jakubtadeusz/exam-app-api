@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamApp.API", "exam-app-exam-api\ExamApp.API.csproj", "{337B11F0-0EE9-453D-A34B-E2A526DC19CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamApp.Intrastructure", "ExamApp.Intrastructure\ExamApp.Intrastructure.csproj", "{92D595EB-8B48-4345-A947-2F894957AB86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamApp.Intrastructure", "ExamApp.Intrastructure\ExamApp.Intrastructure.csproj", "{92D595EB-8B48-4345-A947-2F894957AB86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamApp.Domain", "ExamApp.Domain\ExamApp.Domain.csproj", "{8E32E21F-FD1A-4490-93D7-FED882AE0CA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{92D595EB-8B48-4345-A947-2F894957AB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92D595EB-8B48-4345-A947-2F894957AB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92D595EB-8B48-4345-A947-2F894957AB86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E32E21F-FD1A-4490-93D7-FED882AE0CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E32E21F-FD1A-4490-93D7-FED882AE0CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E32E21F-FD1A-4490-93D7-FED882AE0CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E32E21F-FD1A-4490-93D7-FED882AE0CA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
