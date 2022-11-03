@@ -1,5 +1,4 @@
 using ExamApp.Intrastructure.Extensions;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
