@@ -49,7 +49,7 @@ namespace ExamApp.Intrastructure.Repository.Implementations
 
         public async Task<IEnumerable<Question>> GetQuestionsAsync(int examId)
         {
-            var questions = await _context.Questions.Where(q => q.ExamId == examId).ToListAsync();
+            var questions = await _context.Questions.Include(x => x.Answers).Where(q => q.ExamId == examId).ToListAsync();
 
             return questions;
         }
@@ -57,9 +57,24 @@ namespace ExamApp.Intrastructure.Repository.Implementations
         public async Task<Question> UpdateQuestionAsync(Question question)
         {
             _context.Entry(question).State = EntityState.Modified;
+            foreach (var answer in question.Answers)
+            {
+                _context.Entry(answer).State = EntityState.Modified;
+            }
             await _context.SaveChangesAsync();
 
             return question;
+        }
+
+        public async Task<List<Question>> UpdateQuestionsAsync(List<Question> questions)
+        {
+            var newQuestions = new List<Question>();
+            foreach (var question in questions)
+            {
+                var q = await UpdateQuestionAsync(question);
+                newQuestions.Add(q);
+            }
+            return newQuestions;
         }
     }
 }

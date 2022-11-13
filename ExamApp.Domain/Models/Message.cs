@@ -13,6 +13,6 @@ namespace ExamApp.Domain.Models
         public string Name { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
         public MessageType Type { get; set; }
-        public int OwnerId { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }

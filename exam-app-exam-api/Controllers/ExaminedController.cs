@@ -1,7 +1,9 @@
 ﻿using exam_app_exam_api_host.Utilities;
 using ExamApp.Domain.Models;
 using ExamApp.Intrastructure.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace exam_app_exam_api_host.Controllers
 {
@@ -15,9 +17,10 @@ namespace exam_app_exam_api_host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetExamined([FromQuery] int examId)
+        public async Task<IActionResult> GetExamined()
         {
-            var examined = await _examinedRepository.GetExaminedAsync(examId);
+            var ownerId = GetUserGuid(this.User);
+            var examined = await _examinedRepository.GetExaminedAsync(ownerId);
             var result = new ServiceResponse<IEnumerable<Examined>>(System.Net.HttpStatusCode.OK)
             {
                 ResponseContent = examined
@@ -29,15 +32,17 @@ namespace exam_app_exam_api_host.Controllers
         [HttpPost]
         public async Task<IActionResult> AddExamined([FromBody] Examined examined)
         {
+            var ownerId = GetUserGuid(this.User);
+            examined.OwnerId = ownerId;
             var result = new ServiceResponse<Examined>(System.Net.HttpStatusCode.OK);
             var addedExamined = await _examinedRepository.AddExaminedAsync(examined);
             result.ResponseContent = addedExamined;
-
+            
             return SendResponse(result);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateExamined([FromBody] Examined examined)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateExamined([FromRoute] int id, [FromBody] Examined examined)
         {
             var result = new ServiceResponse<Examined>(System.Net.HttpStatusCode.OK);
             var updatedExamined = await _examinedRepository.UpdateExaminedAsync(examined);
@@ -58,13 +63,21 @@ namespace exam_app_exam_api_host.Controllers
         [HttpGet("group/{groupName}")]
         public async Task<IActionResult> GetExaminedByGroupName([FromRoute] string groupName)
         {
-            var examined = await _examinedRepository.GetExaminedAsync(groupName);
+            var ownerId = GetUserGuid(this.User);
+            var examined = await _examinedRepository.GetExaminedAsync(ownerId, groupName);
             var result = new ServiceResponse<IEnumerable<Examined>>(System.Net.HttpStatusCode.OK)
             {
                 ResponseContent = examined
             };
 
             return SendResponse(result);
+        }
+
+        private Guid GetUserGuid(ClaimsPrincipal user)
+        {
+            var claims = user.Claims;
+            var ownerId = new Guid(claims.FirstOrDefault(x => x.Type == "id").Value);
+            return ownerId;
         }
 
     }

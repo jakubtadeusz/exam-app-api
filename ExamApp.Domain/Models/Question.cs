@@ -1,4 +1,5 @@
 ﻿using ExamApp.Domain.Enums;
+using Newtonsoft.Json;
 
 namespace ExamApp.Domain.Models
 {
@@ -6,6 +7,7 @@ namespace ExamApp.Domain.Models
     {
         public int Id { get; set; }
         public int Order { get; set; }
+        [JsonProperty("question")]
         public string Content { get; set; } = string.Empty;
         public QuestionType Type { get; set; } = QuestionType.SingleChoice;
         public int Points { get; set; } = 1;

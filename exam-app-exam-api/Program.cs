@@ -1,4 +1,8 @@
 using ExamApp.Intrastructure.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +12,20 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.Authority = builder.Configuration["Auth:Authority"];
+        options.Audience = builder.Configuration["Auth:Audience"];
+        options.RequireHttpsMetadata = false;
+        IdentityModelEventSource.ShowPII = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+        };
+        });
+
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 var app = builder.Build();
 
@@ -19,6 +36,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

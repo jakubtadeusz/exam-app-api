@@ -1,6 +1,7 @@
 ﻿using ExamApp.Intrastructure.Context;
 using ExamApp.Intrastructure.Repository.Implementations;
 using ExamApp.Intrastructure.Repository.Interfaces;
+using ExamApp.Intrastructure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,9 @@ namespace ExamApp.Intrastructure.Extensions
 
             services.AddScoped<IExamRepository, ExamRepository>();
             services.AddScoped<IExaminedRepository, ExaminedRepository>();
-            services.AddScoped<IAnswerRepository, AnswerRepository>();            
+            services.AddScoped<IAnswerRepository, AnswerRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<ServiceBusMessager>();
 
             return services;
         }

@@ -1,9 +1,6 @@
 ﻿using ExamApp.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ExamApp.Domain.Models
 {
@@ -13,9 +10,13 @@ namespace ExamApp.Domain.Models
         public string Name { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime ExamTime { get; set; }
+
+        [JsonProperty("examDuration")]
         public int Duration { get; set; }
+        [JsonProperty("status")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ExamStatus ExamStatus { get; set; } = ExamStatus.NotStarted;
-        public int OwnerId { get; set; }
+        public Guid OwnerId { get; set; }
 
         public virtual ICollection<Question>? Questions { get; set; }
         public virtual ICollection<Result>? Answers { get; set; }

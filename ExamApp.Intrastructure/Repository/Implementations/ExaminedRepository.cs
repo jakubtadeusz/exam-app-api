@@ -14,7 +14,7 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             _context = context;
         }
 
-        public async Task<Examined> CreateExaminedAsync(Examined examined)
+        public async Task<Examined> AddExaminedAsync(Examined examined)
         {
             await _context.Examined.AddAsync(examined);
             await _context.SaveChangesAsync();
@@ -39,9 +39,10 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             return examined;
         }
 
-        public async Task<IEnumerable<Examined>> GetExaminedsAsync()
+        public async Task<IEnumerable<Examined>> GetExaminedAsync(Guid ownerId, string group)
         {
-            var result = await _context.Examined.ToListAsync();
+            var examined = await GetExaminedAsync(ownerId);
+            var result = examined.Where(x => x.Group.Equals(group, StringComparison.OrdinalIgnoreCase)).ToList();
             return result;
         }
 
@@ -50,6 +51,12 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             _context.Examined.Update(examined);
             await _context.SaveChangesAsync();
             return examined;
+        }
+        
+        public async Task<IEnumerable<Examined>> GetExaminedAsync(Guid ownerId)
+        {
+            var result = await _context.Examined.Where(x => x.OwnerId.Equals(ownerId)).ToListAsync();
+            return result;
         }
     }
 }

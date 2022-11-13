@@ -14,5 +14,6 @@ namespace ExamApp.Intrastructure.Repository.Interfaces
         Task<Question> AddQuestionAsync(Question question);
         Task<Question> UpdateQuestionAsync(Question question);
         Task DeleteQuestionAsync(int id);
+        Task<List<Question>> UpdateQuestionsAsync(List<Question> questions);
     }
 }

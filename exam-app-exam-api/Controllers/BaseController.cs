@@ -1,10 +1,12 @@
 ﻿using exam_app_exam_api_host.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace exam_app_exam_api_host.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class BaseController : ControllerBase
     {

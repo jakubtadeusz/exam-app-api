@@ -9,8 +9,8 @@ namespace ExamApp.Intrastructure.Repository.Interfaces
 {
     public interface IExaminedRepository
     {
-        Task<IEnumerable<Examined>> GetExaminedAsync(int examId);
-        Task<IEnumerable<Examined>> GetExaminedAsync(string group);
+        Task<IEnumerable<Examined>> GetExaminedAsync(Guid ownerId);
+        Task<IEnumerable<Examined>> GetExaminedAsync(Guid ownerId, string group);
         Task<Examined> GetExaminedByIdAsync(int id);
         Task<Examined> AddExaminedAsync(Examined examined);
         Task<Examined> UpdateExaminedAsync(Examined examined);

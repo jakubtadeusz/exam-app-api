@@ -4,6 +4,7 @@ using ExamApp.Intrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamApp.Intrastructure.Migrations
 {
     [DbContext(typeof(ExamDbContext))]
-    partial class ExamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221111091022_AddOwnerToExaminedAndRemoveMessagesTable")]
+    partial class AddOwnerToExaminedAndRemoveMessagesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,8 +76,8 @@ namespace ExamApp.Intrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -102,8 +104,8 @@ namespace ExamApp.Intrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Surname")
                         .IsRequired()

@@ -39,9 +39,9 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             return exam;
         }
 
-        public async Task<IEnumerable<Exam>> GetExamsAsync(int ownerId)
+        public async Task<IEnumerable<Exam>> GetExamsAsync(Guid ownerId)
         {
-            var exams = await _context.Exams.Where(x => x.OwnerId == ownerId).ToListAsync();
+            var exams = await _context.Exams.Where(x => x.OwnerId.Equals(ownerId)).ToListAsync();
             return exams;
         }
 

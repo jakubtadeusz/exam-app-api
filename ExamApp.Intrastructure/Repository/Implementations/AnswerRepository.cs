@@ -44,9 +44,9 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             return answer;
         }
 
-        public async Task<IEnumerable<Answer>> GetAnswersAsync()
+        public async Task<IEnumerable<Answer>> GetAnswersAsync(int questionId)
         {
-            var result = await _context.Answers.ToListAsync();
+            var result = await _context.Answers.Where(x => x.QuestionId == questionId).ToListAsync();
             return result;
         }
 

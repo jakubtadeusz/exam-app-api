@@ -36,12 +36,22 @@ namespace exam_app_exam_api_host.Controllers
             return SendResponse(result);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateQuestion([FromBody] Question question)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateQuestion([FromQuery] int id, [FromBody] Question question)
         {
             var result = new ServiceResponse<Question>(System.Net.HttpStatusCode.OK);
             var updatedQuestion = await _questionRepository.UpdateQuestionAsync(question);
             result.ResponseContent = updatedQuestion;
+
+            return SendResponse(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateQuestions([FromBody] List<Question> questions)
+        {
+            var result = new ServiceResponse<List<Question>>(System.Net.HttpStatusCode.OK);
+            var updatedQuestions = await _questionRepository.UpdateQuestionsAsync(questions);
+            result.ResponseContent = updatedQuestions;
 
             return SendResponse(result);
         }

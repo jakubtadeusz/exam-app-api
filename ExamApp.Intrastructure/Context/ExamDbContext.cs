@@ -16,7 +16,6 @@ namespace ExamApp.Intrastructure.Context
 
         public DbSet<Answer> Answers { get; set; } = default!;
         public DbSet<Exam> Exams { get; set; } = default!;
-        public DbSet<Message> Messages { get; set; } = default!;
         public DbSet<Question> Questions { get; set; } = default!;
         public DbSet<Result> Results { get; set; } = default!;
         public DbSet<Examined> Examined { get; set; } = default!;

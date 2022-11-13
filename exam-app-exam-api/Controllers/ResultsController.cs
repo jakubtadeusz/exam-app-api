@@ -27,12 +27,6 @@ namespace exam_app_exam_api_host.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddResults([FromBody] List<Result> result)
-        {
-            return Ok();
-        }
-
-        [HttpPost]
         public async Task<IActionResult> GradeResult([FromBody] Result result)
         {
             {
