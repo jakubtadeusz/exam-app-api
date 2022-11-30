@@ -97,12 +97,5 @@ namespace exam_app_exam_api_host.Controllers
 
             return SendResponse(response);
         }
-
-        private Guid GetUserGuid(ClaimsPrincipal user)
-        {
-            var claims = user.Claims;
-            var ownerId = new Guid(claims.FirstOrDefault(x => x.Type == "id").Value);
-            return ownerId;
-        }
     }
 }

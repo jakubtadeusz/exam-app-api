@@ -2,7 +2,6 @@
 using ExamApp.Intrastructure.Context;
 using ExamApp.Intrastructure.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Entity.Core;
 
 namespace ExamApp.Intrastructure.Repository.Implementations
 {
@@ -32,10 +31,6 @@ namespace ExamApp.Intrastructure.Repository.Implementations
         public async Task<Exam> GetExamByIdAsync(int id)
         {
             var exam = await _context.Exams.FindAsync(id);
-            if (exam == null)
-            {
-                throw new ObjectNotFoundException($"exam not found id = {id}");
-            }
             return exam;
         }
 

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace ExamApp.Domain.Enums
 {
     public enum MessageType
     {
+        [EnumMember(Value = "Zaproszenie")]
         Invite,
+        [EnumMember(Value = "Ocena")]
         Grade
     }
 }

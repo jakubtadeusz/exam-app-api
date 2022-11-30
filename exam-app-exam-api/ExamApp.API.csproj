@@ -24,4 +24,10 @@
     <ProjectReference Include="..\ExamApp.Intrastructure\ExamApp.Intrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

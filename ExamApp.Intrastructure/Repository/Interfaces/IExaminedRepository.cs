@@ -15,5 +15,6 @@ namespace ExamApp.Intrastructure.Repository.Interfaces
         Task<Examined> AddExaminedAsync(Examined examined);
         Task<Examined> UpdateExaminedAsync(Examined examined);
         Task DeleteExaminedAsync(int id);
+        Task<IEnumerable<string>> GetGroupsAsync(Guid ownerId);
     }
 }

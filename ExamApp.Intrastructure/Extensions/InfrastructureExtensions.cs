@@ -5,11 +5,6 @@ using ExamApp.Intrastructure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExamApp.Intrastructure.Extensions
 {
@@ -27,6 +22,8 @@ namespace ExamApp.Intrastructure.Extensions
             services.AddScoped<IExaminedRepository, ExaminedRepository>();
             services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IResultRepository, ResultRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<ServiceBusMessager>();
 
             return services;

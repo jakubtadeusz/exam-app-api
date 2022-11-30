@@ -9,10 +9,12 @@ namespace ExamApp.Intrastructure.Repository.Interfaces
 {
     public interface IMessageRepository
     {
-        Task<IEnumerable<Message>> GetMessagesAsync(int ownerId);
+        Task<IEnumerable<Message>> GetMessagesAsync(Guid ownerId, string? type);
         Task<Message> GetMessageByIdAsync(int id);
         Task<Message> CreateMessageAsync(Message message);
         Task<Message> UpdateMessageAsync(Message message);
         Task DeleteMessageAsync(int id);
+        Task<int> SendGradesAsync(int examId, int examId1, string group);
+        Task<int> SendInvitationsAsync(Guid ownerId, int examId, int examId1, string group);
     }
 }

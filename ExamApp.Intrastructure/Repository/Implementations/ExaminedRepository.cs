@@ -58,5 +58,11 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             var result = await _context.Examined.Where(x => x.OwnerId.Equals(ownerId)).ToListAsync();
             return result;
         }
+
+        public async Task<IEnumerable<string>> GetGroupsAsync(Guid ownerId)
+        {
+            var groups = await _context.Examined.Where(x => x.OwnerId.Equals(ownerId)).Select(x => x.Group).Distinct().ToListAsync();
+            return groups;
+        }
     }
 }

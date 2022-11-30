@@ -19,12 +19,18 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             _context = context;
         }
 
-        public async Task<Result> CreateResultAsync(Result result)
+        public async Task<List<Result>> CreateResultsAsync(List<Result> results)
         {
-            await _context.Results.AddAsync(result);
+            foreach (var result in results)
+            {
+                var oldResults = _context.Results.Where(x => x.ExaminedId == result.ExaminedId && x.QuestionId == result.QuestionId);
+                _context.Results.RemoveRange(oldResults);
+                result.ExamId = _context.Questions.Find(result.QuestionId).ExamId;
+            }
+            await _context.Results.AddRangeAsync(results);
             await _context.SaveChangesAsync();
 
-            return result;
+            return results;
         }
 
         public async Task DeleteResultAsync(int id)
@@ -54,17 +60,31 @@ namespace ExamApp.Intrastructure.Repository.Implementations
 
         public async Task<IEnumerable<Result>> GetResultsAsync(int examId)
         {
-            var results = await _context.Results.Include(x => x.Question).Where(r => r.Question.ExamId == examId).ToListAsync();
+            var results = await _context.Results.Where(x => x.ExamId == examId).ToListAsync();
 
             return results;
         }
 
-        public async Task<Result> UpdateResultAsync(Result result)
+        public async Task<IEnumerable<Result>> GetResultsWithExaminedAsync(int examId)
         {
-            _context.Results.Update(result);
-            await _context.SaveChangesAsync();
+            var results = await _context.Results.Include(x => x.Examined).Where(x => x.ExamId == examId).ToListAsync();
 
-            return result;
+            return results;
+        }
+
+        public async Task<List<Result>> GradeResultsAsync(List<Result> results)
+        {
+            foreach(var result in results)
+            {
+                var oldRes = _context.Results.Find(result.Id);
+                if (oldRes != null)
+                {
+                    oldRes.Score = result.Score;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return results;
         }
     }
 }

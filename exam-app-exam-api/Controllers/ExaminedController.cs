@@ -1,9 +1,7 @@
 ﻿using exam_app_exam_api_host.Utilities;
 using ExamApp.Domain.Models;
 using ExamApp.Intrastructure.Repository.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace exam_app_exam_api_host.Controllers
 {
@@ -73,12 +71,19 @@ namespace exam_app_exam_api_host.Controllers
             return SendResponse(result);
         }
 
-        private Guid GetUserGuid(ClaimsPrincipal user)
+        [HttpGet("groups")]
+        public async Task<IActionResult> GetGroups()
         {
-            var claims = user.Claims;
-            var ownerId = new Guid(claims.FirstOrDefault(x => x.Type == "id").Value);
-            return ownerId;
-        }
+            {
+                var ownerId = GetUserGuid(this.User);
+                var groups = await _examinedRepository.GetGroupsAsync(ownerId);
+                var result = new ServiceResponse<IEnumerable<string>>(System.Net.HttpStatusCode.OK)
+                {
+                    ResponseContent = groups
+                };
 
+                return SendResponse(result);
+            }
+        }
     }
 }

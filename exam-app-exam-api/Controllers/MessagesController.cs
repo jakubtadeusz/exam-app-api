@@ -2,6 +2,7 @@
 using ExamApp.Domain.Models;
 using ExamApp.Intrastructure.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace exam_app_exam_api_host.Controllers
 {
@@ -15,9 +16,10 @@ namespace exam_app_exam_api_host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMessages([FromQuery] int ownerId)
+        public async Task<IActionResult> GetMessages([FromQuery][Optional] string? type)
         {
-            var messages = await _messageRepository.GetMessagesAsync(ownerId);
+            var ownerId = GetUserGuid(this.User);
+            var messages = await _messageRepository.GetMessagesAsync(ownerId, type);
             var result = new ServiceResponse<IEnumerable<Message>>(System.Net.HttpStatusCode.OK)
             {
                 ResponseContent = messages
@@ -29,6 +31,8 @@ namespace exam_app_exam_api_host.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMessage([FromBody] Message message)
         {
+            var ownerId = GetUserGuid(this.User);
+            message.OwnerId = ownerId;
             var result = new ServiceResponse<Message>(System.Net.HttpStatusCode.OK);
             var addedMessage = await _messageRepository.CreateMessageAsync(message);
             result.ResponseContent = addedMessage;
@@ -65,6 +69,31 @@ namespace exam_app_exam_api_host.Controllers
             };
 
             return SendResponse(result);
+        }
+
+        [HttpPost("{messageId}/SendGrades/{examId}/{group}")]
+        public async Task<IActionResult> SendGrades(int messageId, int examId, string group)
+        {
+            {
+                var result = new ServiceResponse<int>(System.Net.HttpStatusCode.OK);
+                var messagesAmount = await _messageRepository.SendGradesAsync(messageId, examId, group);
+                result.ResponseContent = messagesAmount;
+
+                return SendResponse(result);
+            }
+        }
+        
+        [HttpPost("{messageId}/SendInvitations/{examId}/{group}")]
+        public async Task<IActionResult> SendInvitations(int messageId, int examId, string group)
+        {
+            {
+                var ownerId = GetUserGuid(this.User);
+                var result = new ServiceResponse<int>(System.Net.HttpStatusCode.OK);
+                var messagesAmount = await _messageRepository.SendInvitationsAsync(ownerId, messageId, examId, group);
+                result.ResponseContent = messagesAmount;
+
+                return SendResponse(result);
+            }
         }
     }
 }

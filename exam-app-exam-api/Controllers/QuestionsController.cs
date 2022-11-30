@@ -1,6 +1,7 @@
 ﻿using exam_app_exam_api_host.Utilities;
 using ExamApp.Domain.Models;
 using ExamApp.Intrastructure.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exam_app_exam_api_host.Controllers
@@ -13,8 +14,9 @@ namespace exam_app_exam_api_host.Controllers
         {
             _questionRepository = questionRepository;
         }
-
+        
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetQuestions([FromQuery] int examId)
         {
             var questions = await _questionRepository.GetQuestionsAsync(examId);

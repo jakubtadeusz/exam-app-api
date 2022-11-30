@@ -9,5 +9,6 @@
         public int ExaminedId { get; set; }
         public virtual Examined? Examined { get; set; }
         public int? Score { get; set; } = null;
+        public int? ExamId { get; set; }
     }
 }
