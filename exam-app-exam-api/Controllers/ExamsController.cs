@@ -68,7 +68,15 @@ namespace exam_app_exam_api_host.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromQuery] int examId, [FromBody] Exam exam)
         {
+            var oldExam = await _examRepository.GetExamByIdAsync(examId);
+            var oldDateTime = oldExam.ExamTime;
+
             var updatedExam = await _examRepository.UpdateExamAsync(exam);
+
+            if (!exam.ExamTime.Equals(oldDateTime))
+            {
+                await _serviceBusMessager.SendPlanExamMessage(examId);
+            }
 
             var response = new ServiceResponse<Exam>(System.Net.HttpStatusCode.OK)
             {
