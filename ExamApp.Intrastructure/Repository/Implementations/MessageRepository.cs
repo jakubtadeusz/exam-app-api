@@ -104,12 +104,12 @@ namespace ExamApp.Intrastructure.Repository.Implementations
                 MessageId = messageId,
                 ExamName = exam.Name,
                 ExamDate = exam.ExamTime,
-                Emails = examined.Select(x => x.Email).ToList()
+                ExaminedInfo = examined.ToDictionary(k => k.Id, v => v.Email)
             };
 
             await _serviceBusMessager.SendInvitationMessageCommand(command);
             
-            return command.Emails.Count;
+            return command.ExaminedInfo.Keys.Count;
         }
 
         public async Task<Message> UpdateMessageAsync(Message message)
