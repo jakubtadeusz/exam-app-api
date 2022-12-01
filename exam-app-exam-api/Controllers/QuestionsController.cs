@@ -9,12 +9,14 @@ namespace exam_app_exam_api_host.Controllers
     public class QuestionsController : BaseController
     {
         private readonly IQuestionRepository _questionRepository;
+        private readonly ILogger<QuestionsController> _logger;
 
-        public QuestionsController(IQuestionRepository questionRepository)
+        public QuestionsController(IQuestionRepository questionRepository, ILogger<QuestionsController> logger)
         {
             _questionRepository = questionRepository;
+            _logger = logger;
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetQuestions([FromQuery] int examId)
@@ -24,6 +26,8 @@ namespace exam_app_exam_api_host.Controllers
             {
                 ResponseContent = questions
             };
+
+            _logger.LogTrace($"Questions for exam {examId} requested");
 
             return SendResponse(result);
         }
@@ -35,6 +39,8 @@ namespace exam_app_exam_api_host.Controllers
             var addedQuestion = await _questionRepository.AddQuestionAsync(question);
             result.ResponseContent = addedQuestion;
 
+            _logger.LogInformation($"Question {addedQuestion.Id} created");
+
             return SendResponse(result);
         }
 
@@ -44,6 +50,8 @@ namespace exam_app_exam_api_host.Controllers
             var result = new ServiceResponse<Question>(System.Net.HttpStatusCode.OK);
             var updatedQuestion = await _questionRepository.UpdateQuestionAsync(question);
             result.ResponseContent = updatedQuestion;
+
+            _logger.LogInformation($"Edited question {id}");
 
             return SendResponse(result);
         }
@@ -55,6 +63,8 @@ namespace exam_app_exam_api_host.Controllers
             var updatedQuestions = await _questionRepository.UpdateQuestionsAsync(questions);
             result.ResponseContent = updatedQuestions;
 
+            _logger.LogInformation($"Updated {updatedQuestions.Count} questions");
+
             return SendResponse(result);
         }
 
@@ -63,6 +73,8 @@ namespace exam_app_exam_api_host.Controllers
         {
             var result = new ServiceResponse<Question>(System.Net.HttpStatusCode.OK);
             await _questionRepository.DeleteQuestionAsync(id);
+
+            _logger.LogInformation($"Removed question {id}");
 
             return SendResponse(result);
         }
@@ -73,6 +85,8 @@ namespace exam_app_exam_api_host.Controllers
             var result = new ServiceResponse<Question>(System.Net.HttpStatusCode.OK);
             var question = await _questionRepository.GetQuestionByIdAsync(id);
             result.ResponseContent = question;
+
+            _logger.LogInformation($"Requested queston {id}");
 
             return SendResponse(result);
         }

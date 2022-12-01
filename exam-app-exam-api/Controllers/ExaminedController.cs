@@ -8,10 +8,12 @@ namespace exam_app_exam_api_host.Controllers
     public class ExaminedController : BaseController
     {
         private readonly IExaminedRepository _examinedRepository;
+        private readonly ILogger<ExaminedController> _logger;
 
-        public ExaminedController(IExaminedRepository examinedRepository)
+        public ExaminedController(IExaminedRepository examinedRepository, ILogger<ExaminedController> logger)
         {
             _examinedRepository = examinedRepository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -24,6 +26,8 @@ namespace exam_app_exam_api_host.Controllers
                 ResponseContent = examined
             };
 
+            _logger.LogInformation($"User {ownerId} requested examined");
+
             return SendResponse(result);
         }
 
@@ -35,7 +39,9 @@ namespace exam_app_exam_api_host.Controllers
             var result = new ServiceResponse<Examined>(System.Net.HttpStatusCode.OK);
             var addedExamined = await _examinedRepository.AddExaminedAsync(examined);
             result.ResponseContent = addedExamined;
-            
+
+            _logger.LogInformation($"User {ownerId} created new examined, examinedId: {addedExamined.Id}");
+
             return SendResponse(result);
         }
 
@@ -46,6 +52,8 @@ namespace exam_app_exam_api_host.Controllers
             var updatedExamined = await _examinedRepository.UpdateExaminedAsync(examined);
             result.ResponseContent = updatedExamined;
 
+            _logger.LogInformation($"Examined {id} updated");
+
             return SendResponse(result);
         }
 
@@ -54,6 +62,8 @@ namespace exam_app_exam_api_host.Controllers
         {
             var result = new ServiceResponse<Examined>(System.Net.HttpStatusCode.OK);
             await _examinedRepository.DeleteExaminedAsync(id);
+
+            _logger.LogInformation($"Examined {id} removed");
 
             return SendResponse(result);
         }
@@ -68,6 +78,8 @@ namespace exam_app_exam_api_host.Controllers
                 ResponseContent = examined
             };
 
+            _logger.LogInformation($"User {ownerId} requested examined for group: {groupName}");
+
             return SendResponse(result);
         }
 
@@ -81,6 +93,8 @@ namespace exam_app_exam_api_host.Controllers
                 {
                     ResponseContent = groups
                 };
+
+                _logger.LogInformation($"User {ownerId} requested groups");
 
                 return SendResponse(result);
             }

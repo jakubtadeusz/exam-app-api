@@ -11,12 +11,14 @@ namespace exam_app_exam_api_host.Controllers
     public class ResultsController : BaseController
     {
         private readonly IResultRepository _resultRepository;
+        private readonly ILogger<ResultsController> _logger;
         private readonly ServiceBusMessager _serviceBusMessager;
 
-        public ResultsController(IResultRepository resultRepository, ServiceBusMessager serviceBusMessager)
+        public ResultsController(IResultRepository resultRepository, ServiceBusMessager serviceBusMessager, ILogger<ResultsController> logger)
         {
             _resultRepository = resultRepository;
             _serviceBusMessager = serviceBusMessager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -46,6 +48,8 @@ namespace exam_app_exam_api_host.Controllers
             {
                 ResponseContent = resultsViewModel.Values.ToList()
             };
+            
+            _logger.LogInformation($"Requested results for exam {examId}");
 
             return SendResponse(response);
         }
@@ -87,17 +91,21 @@ namespace exam_app_exam_api_host.Controllers
                 ResponseContent = resp
             };
 
+            _logger.LogTrace($"Added {results.Count} new results");
+
             return SendResponse(serviceResponse);
         }
         
         [HttpPost("grade")]
         public async Task<IActionResult> GradeResult([FromBody] List<Result> results)
         {
-            var gradedResult = await _resultRepository.GradeResultsAsync(results);
+            var gradedResults = await _resultRepository.GradeResultsAsync(results);
             var serviceResponse = new ServiceResponse<List<Result>>(System.Net.HttpStatusCode.OK)
             {
-                ResponseContent = gradedResult
+                ResponseContent = gradedResults
             };
+
+            _logger.LogInformation($"Graded {gradedResults.Count} results");
 
             return SendResponse(serviceResponse);
         }
@@ -106,6 +114,8 @@ namespace exam_app_exam_api_host.Controllers
         public async Task<IActionResult> FinishGrading([FromRoute] int examId)
         {
             await _serviceBusMessager.SendFinishGradingCommand(examId);
+
+            _logger.LogInformation($"FinishGradingCommand sent for exam {examId}");
 
             return SendResponse(new ServiceResponse(System.Net.HttpStatusCode.OK));
         }

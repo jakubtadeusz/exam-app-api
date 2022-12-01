@@ -3,10 +3,7 @@ using ExamApp.Domain.Models;
 using ExamApp.Intrastructure.Repository.Interfaces;
 using ExamApp.Intrastructure.ServiceBus;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace exam_app_exam_api_host.Controllers
 {
@@ -14,11 +11,13 @@ namespace exam_app_exam_api_host.Controllers
     {
         private readonly IExamRepository _examRepository;
         private readonly ServiceBusMessager _serviceBusMessager;
+        private readonly ILogger<ExamsController> _logger;
 
-        public ExamsController(IExamRepository examRepository, ServiceBusMessager serviceBusMessager)
+        public ExamsController(IExamRepository examRepository, ServiceBusMessager serviceBusMessager, ILogger<ExamsController> logger)
         {
             _examRepository = examRepository;
             _serviceBusMessager = serviceBusMessager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -31,6 +30,8 @@ namespace exam_app_exam_api_host.Controllers
             {
                 ResponseContent = exams
             };
+
+            _logger.LogInformation($"User {ownerId} requested exams");
 
             return SendResponse(response);
         }
@@ -47,6 +48,8 @@ namespace exam_app_exam_api_host.Controllers
                 ResponseContent = exam
             };
 
+            _logger.LogTrace($"Exam with id: {id} requested");
+
             return SendResponse(response);
         }
 
@@ -62,6 +65,8 @@ namespace exam_app_exam_api_host.Controllers
                 ResponseContent = createdExam
             };
 
+            _logger.LogInformation($"User {ownerId} created exam, examId: {createdExam.Id}");
+
             return SendResponse(response);
         }
 
@@ -73,9 +78,12 @@ namespace exam_app_exam_api_host.Controllers
 
             var updatedExam = await _examRepository.UpdateExamAsync(exam);
 
+            _logger.LogInformation($"Updated exam {examId}");
+
             if (!exam.ExamTime.Equals(oldDateTime))
             {
                 await _serviceBusMessager.SendPlanExamMessage(examId);
+                _logger.LogInformation($"PlanExamCommand sent for examId: {examId}");
             }
 
             var response = new ServiceResponse<Exam>(System.Net.HttpStatusCode.OK)
@@ -93,6 +101,8 @@ namespace exam_app_exam_api_host.Controllers
 
             var response = new ServiceResponse(System.Net.HttpStatusCode.OK);
 
+            _logger.LogInformation($"Removed exam {id}");
+
             return SendResponse(response);
         }
 
@@ -100,6 +110,8 @@ namespace exam_app_exam_api_host.Controllers
         public async Task<IActionResult> StartExam([FromRoute] int examId)
         {
             await _serviceBusMessager.SendStartExamMessage(examId);
+
+            _logger.LogInformation($"StartExamCommand sent for exam {examId}");
 
             var response = new ServiceResponse<Exam>(System.Net.HttpStatusCode.OK);
 
