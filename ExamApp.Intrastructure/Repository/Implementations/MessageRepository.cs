@@ -102,6 +102,7 @@ namespace ExamApp.Intrastructure.Repository.Implementations
             var command = new InvitationMessageCommand()
             {
                 MessageId = messageId,
+                ExamId = examId,
                 ExamName = exam.Name,
                 ExamDate = exam.ExamTime,
                 ExaminedInfo = examined.ToDictionary(k => k.Id, v => v.Email)

@@ -10,6 +10,7 @@ namespace ExamApp.Intrastructure.ServiceBus.Messages
     {
         public int MessageId { get; set; }
         public Dictionary<int, string> ExaminedInfo { get; set; }
+        public int ExamId { get; set; }
         public string ExamName { get; set; }
         public DateTime ExamDate { get; set; }
     }
